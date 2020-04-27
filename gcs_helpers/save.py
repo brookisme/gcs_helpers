@@ -7,7 +7,7 @@ import rasterio as rio
 from pyproj import Proj, transform
 from affine import Affine
 from rasterio.crs import CRS
-import gcs_helpers.utils as utils
+from . import utils
 #
 # CONSTANTS
 #
@@ -33,31 +33,7 @@ DEFAULT_MIME_TYPE=JSON_MIME_TYPE
 
 
 
-#
-# IMAGE HELPERS
-#
-def image_profile(lon,lat,crs,resolution,im,driver=GTIFF_DRIVER):
-    count,height,width=im.shape
-    x,y=transform(Proj(init='epsg:4326'),Proj(init=crs),lon,lat)
-    x,y=int(round(x)),int(round(y))
-    xmin=x-int(width/2)
-    ymin=y-int(height/2)
-    profile={
-        'count': count,
-        'crs': CRS.from_string(crs),
-        'driver': GTIFF_DRIVER,
-        'dtype': im.dtype,
-        'height': height,
-        'nodata': None,
-        'transform': Affine(resolution,0,xmin,0,-resolution,ymin),
-        'width': width }
-    if driver==GTIFF_DRIVER:
-        profile.update({
-            'compress': 'lzw',
-            'interleave': 'pixel',
-            'tiled': False
-        })
-    return profile
+
 
 
 
@@ -76,7 +52,7 @@ def gcs_service(service=None):
     wait_exponential_multiplier=WAIT_EXP_MULTIPLIER, 
     wait_exponential_max=WAIT_EXP_MAX,
     stop_max_attempt_number=STOP_MAX_ATTEMPT)
-def save_to_gcs(
+def to_gcs(
         src,
         dest=None,
         mtype=DEFAULT_MIME_TYPE,
@@ -121,7 +97,7 @@ def save_to_gcs(
         return response
 
 
-def image_to_gcs(
+def image(
     im,
     dest,
     profile=None,
@@ -158,7 +134,7 @@ def image_to_gcs(
         delete_src_file=delete_src_file)
 
 
-def csv_to_gcs(
+def csv(
     dataset,
     dest,
     tmp_name=TMP_NAME,
@@ -185,7 +161,7 @@ def csv_to_gcs(
         delete_src_file=delete_src_file)
 
 
-def json_to_gcs(
+def json(
     dataset,
     dest,
     tmp_name=TMP_NAME,
@@ -244,7 +220,7 @@ def _gcs_path_and_bucket(dest,folder,bucket):
 
 
 def _save_and_clean(src,dest,mtype,folder,bucket,service,return_path,delete_src_file):
-    out=save_to_gcs(
+    out=to_gcs(
         src=src,
         dest=dest,
         mtype=mtype,
