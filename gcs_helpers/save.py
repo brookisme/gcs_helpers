@@ -1,5 +1,4 @@
 import os
-import secrets
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from retrying import retry
@@ -114,7 +113,7 @@ def image(
         mtype=mtype
         ext='tif'
     if not isinstance(im,str):
-        tmp_name=_get_tmp_name(tmp_name,ext)
+        tmp_name=utils.generate_name(tmp_name,ext)
         with rio.open(tmp_name,'w',**profile) as dst:
                 dst.write(im)
         im=tmp_name
@@ -142,7 +141,7 @@ def csv(
     """
     """  
     if not isinstance(dataset,str):
-        tmp_name=_get_tmp_name(tmp_name,'csv')
+        tmp_name=utils.generate_name(tmp_name,'csv')
         dataset.to_csv(tmp_name,index=False)
         dataset=tmp_name
     return _save_and_clean(
@@ -178,7 +177,7 @@ def json(
     if isinstance(dataset,str):
         tmp_name=dataset
     else:
-        tmp_name=_get_tmp_name(tmp_name,ext)
+        tmp_name=utils.generate_name(tmp_name,ext)
         utils.write_json(dataset,tmp_name)
         dataset=tmp_name
         delete_src_file=(not save_tmp_file)
@@ -196,14 +195,6 @@ def json(
 #
 # INTERNAL
 #
-def _get_tmp_name(tmp_name,ext=None):
-    if not tmp_name:
-        tmp_name=secrets.token_urlsafe(16)
-    if ext:
-        tmp_name=f'{tmp_name}.{ext}'
-    return tmp_name
-
-
 def _gcs_path_and_bucket(dest,folder,bucket):
     if not bucket:
         parts=dest.split('/')

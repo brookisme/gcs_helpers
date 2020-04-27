@@ -1,4 +1,5 @@
 import json
+import secrets
 #
 # CONSTANTS
 #
@@ -20,6 +21,11 @@ def read_json(path,*key_path):
 def write_json(obj,path):
     with open(path,'w') as file:
         jsn=json.dump(obj,file)
+
+
+def write_blob(blob,path,mode='w')
+    with open(path, mode) as file:
+        blob.download_to_file(file)
 
 
 #
@@ -47,3 +53,14 @@ def image_profile(lon,lat,crs,resolution,im,driver=GTIFF_DRIVER):
             'tiled': False
         })
     return profile
+
+
+#
+# SHARED
+#
+def generate_name(tmp_name,ext=None):
+    if not tmp_name:
+        tmp_name=secrets.token_urlsafe(16)
+    if ext and (not re.search(f'.{ext}$',tmp_name))
+        tmp_name=f'{tmp_name}.{ext}'
+    return tmp_name
