@@ -179,7 +179,7 @@ def json(
         tmp_name=dataset
     else:
         tmp_name=_get_tmp_name(tmp_name,ext)
-        utils.write(dataset,tmp_name)
+        utils.write_json(dataset,tmp_name)
         dataset=tmp_name
         delete_src_file=(not save_tmp_file)
     return _save_and_clean(
