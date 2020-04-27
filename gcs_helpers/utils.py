@@ -23,7 +23,7 @@ def write_json(obj,path):
         jsn=json.dump(obj,file)
 
 
-def write_blob(blob,path,mode='w')
+def write_blob(blob,path,mode='w'):
     with open(path, mode) as file:
         blob.download_to_file(file)
 
