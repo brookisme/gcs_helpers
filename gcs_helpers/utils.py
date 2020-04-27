@@ -1,4 +1,9 @@
 import json
+#
+# CONSTANTS
+#
+GTIFF_DRIVER='GTiff'
+PNG_DRIVER='PNG'
 
 
 #
@@ -15,7 +20,6 @@ def read_json(path,*key_path):
 def write_json(obj,path):
     with open(path,'w') as file:
         jsn=json.dump(obj,file)
-
 
 
 #

@@ -16,8 +16,6 @@ PNG_MIME_TYPE='image/png'
 CSV_MIME_TYPE='text/csv'
 JSON_MIME_TYPE='application/json'
 GEOJSON_MIME_TYPE='application/geo+json'
-GTIFF_DRIVER='GTiff'
-PNG_DRIVER='PNG'
 
 
 
@@ -33,13 +31,8 @@ DEFAULT_MIME_TYPE=JSON_MIME_TYPE
 
 
 
-
-
-
-
-
 #
-# GOOGLE STORAGE HELPERS
+# MAIN
 #
 def gcs_service(service=None):
     """ get gcloud storage client if it does not already exist """
@@ -52,6 +45,8 @@ def gcs_service(service=None):
     wait_exponential_multiplier=WAIT_EXP_MULTIPLIER, 
     wait_exponential_max=WAIT_EXP_MAX,
     stop_max_attempt_number=STOP_MAX_ATTEMPT)
+
+
 def to_gcs(
         src,
         dest=None,
