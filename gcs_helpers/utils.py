@@ -61,6 +61,6 @@ def image_profile(lon,lat,crs,resolution,im,driver=GTIFF_DRIVER):
 def generate_name(tmp_name,ext=None):
     if not tmp_name:
         tmp_name=secrets.token_urlsafe(16)
-    if ext and (not re.search(f'.{ext}$',tmp_name))
+    if ext and (not re.search(f'.{ext}$',tmp_name)):
         tmp_name=f'{tmp_name}.{ext}'
     return tmp_name
