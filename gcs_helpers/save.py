@@ -7,7 +7,7 @@ import rasterio as rio
 from pyproj import Proj, transform
 from affine import Affine
 from rasterio.crs import CRS
-import .utils as utils
+import gcs_helpers.utils as utils
 #
 # CONSTANTS
 #
