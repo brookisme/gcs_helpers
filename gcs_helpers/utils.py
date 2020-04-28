@@ -1,3 +1,4 @@
+import re
 import json
 import secrets
 #
@@ -58,9 +59,9 @@ def image_profile(lon,lat,crs,resolution,im,driver=GTIFF_DRIVER):
 #
 # SHARED
 #
-def generate_name(tmp_name,ext=None):
-    if not tmp_name:
-        tmp_name=secrets.token_urlsafe(16)
-    if ext and (not re.search(f'.{ext}$',tmp_name)):
-        tmp_name=f'{tmp_name}.{ext}'
-    return tmp_name
+def generate_name(name=None,ext=None):
+    if not name:
+        name=secrets.token_urlsafe(16)
+    if ext and (not re.search(f'.{ext}$',name)):
+        name=f'{name}.{ext}'
+    return name
