@@ -40,7 +40,7 @@ def blob(
     else:
         if not dest:
             dest=utils.generate_name(dest,ext)
-        utils.write_blob(blob,dest,write_mode=write_mode)
+        utils.write_blob(blob,dest,mode=write_mode)
         return dest
 
 
