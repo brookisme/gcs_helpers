@@ -24,9 +24,10 @@ def blob(
         as_data=False,
         path=None,
         write_mode='w',
+        project=None,
         client=None):
     if not client:
-        client=storage.Client(project=PROJECT)
+        client=storage.Client(project=project)
     if path:
         bucket, key=bucket_key_from_path(path)
     bucket=client.get_bucket(bucket)
