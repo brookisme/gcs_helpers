@@ -1,6 +1,8 @@
+import os
 from io import BytesIO
 import secrets
 from google.cloud import storage
+import image_kit.io as io
 from . import utils
 
 
@@ -41,6 +43,40 @@ def blob(
         if not dest:
             dest=utils.generate_name(dest,ext)
         utils.write_blob(blob,dest,mode=write_mode)
+        return dest
+
+
+def image(
+        bucket=None,
+        key=None,
+        dest=None,
+        ext='tif',
+        path=None,
+        write_mode='wb',
+        project=None,
+        return_data=True,
+        remove_data=True,
+        return_dest_with_data=False,
+        return_profile=True,
+        client=None):
+    dest=blob(
+        bucket=bucket,
+        key=key,
+        dest=dest,
+        ext=ext,
+        path=path,
+        write_mode=write_mode,
+        project=project,
+        client=client)
+    if return_data:
+        data=io.read(dest,return_profile=return_profile)
+        if remove_data:
+            os.remove(dest)
+        if (not remove_data) and return_dest_with_data:
+            return data, dest
+        else:
+            return data
+    else:
         return dest
 
 
