@@ -2,7 +2,11 @@ import os
 from io import BytesIO
 import secrets
 from google.cloud import storage
-import image_kit.io as io
+# colab hack
+try:
+    import image_kit.io as io
+except:
+    import image_kit.image_kit.io as io
 from . import utils
 
 
