@@ -1,5 +1,6 @@
 import re
 import json
+import geojson
 import secrets
 #
 # CONSTANTS
@@ -14,6 +15,14 @@ PNG_DRIVER='PNG'
 def read_json(path,*key_path):
     with open(path,'r') as file:
         jsn=json.load(file)
+    for k in key_path:
+        jsn=jsn[k]
+    return jsn
+
+
+def read_geojson(path,*key_path):
+    with open(path,'r') as file:
+        jsn=geojson.load(file)
     for k in key_path:
         jsn=jsn[k]
     return jsn
