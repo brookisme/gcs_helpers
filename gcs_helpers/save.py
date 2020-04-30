@@ -15,7 +15,8 @@ PNG_MIME_TYPE='image/png'
 CSV_MIME_TYPE='text/csv'
 JSON_MIME_TYPE='application/json'
 GEOJSON_MIME_TYPE='application/geo+json'
-
+PNG_EXT='png'
+TIF_EXT='tif'
 
 
 #
@@ -27,7 +28,7 @@ STOP_MAX_ATTEMPT=7
 TMP_NAME=None
 DEFAULT_IMAGE_MIME_TYPE=TIF_MIME_TYPE
 DEFAULT_MIME_TYPE=JSON_MIME_TYPE
-
+DEFAULT_EXT=TIF_EXT
 
 
 #
@@ -96,6 +97,7 @@ def image(
     dest,
     profile=None,
     mtype=DEFAULT_IMAGE_MIME_TYPE,
+    ext=DEFAULT_EXT,
     png=False,
     tmp_name=TMP_NAME,
     folder=None,
@@ -108,10 +110,7 @@ def image(
     """
     if png:
         mtype=PNG_MIME_TYPE
-        ext='png'
-    else:
-        mtype=mtype
-        ext='tif'
+        ext=PNG_EXT
     if not isinstance(im,str):
         tmp_name=utils.generate_name(tmp_name,ext)
         with rio.open(tmp_name,'w',**profile) as dst:
