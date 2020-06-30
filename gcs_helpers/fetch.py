@@ -30,7 +30,7 @@ def blob(
         ext=None,
         as_data=False,
         path=None,
-        write_mode='w',
+        write_mode='wb',
         project=None,
         client=None):
     if not client:
