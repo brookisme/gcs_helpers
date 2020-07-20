@@ -116,6 +116,7 @@ def image(
         with rio.open(tmp_name,'w',**profile) as dst:
                 dst.write(im)
         im=tmp_name
+        delete_src_file=(not save_tmp_file)
     return _save_and_clean(
         src=im,
         dest=dest,
@@ -143,6 +144,7 @@ def csv(
         tmp_name=utils.generate_name(tmp_name,'csv')
         dataset.to_csv(tmp_name,index=False)
         dataset=tmp_name
+        delete_src_file=(not save_tmp_file)
     return _save_and_clean(
         src=dataset,
         dest=dest,
