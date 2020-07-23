@@ -3,12 +3,7 @@ from io import BytesIO
 import re
 import secrets
 from google.cloud import storage
-# colab hack
-try:
-    import imagebox.io as io
-except:
-    import imagebox.imagebox.io as io
-from . import utils
+import rasterio as rio
 
 
 GS_PREFIX='gs://'
@@ -74,7 +69,7 @@ def image(
         project=project,
         client=client)
     if return_data:
-        data=io.read(dest,return_profile=return_profile)
+        data=_read(dest,return_profile=return_profile)
         if remove_data:
             os.remove(dest)
         if (not remove_data) and return_dest_with_data:
@@ -84,5 +79,20 @@ def image(
     else:
         return dest
 
+
+#
+# INTERNAL
+#
+def _read(path,return_profile=True,dtype=None):
+    with rio.open(path,'r') as src:
+        if return_profile:
+            profile=src.profile
+        image=src.read()
+        if dtype:
+            image=image.astype(dtype)
+    if return_profile:
+        return image, profile
+    else:
+        return image
 
 
