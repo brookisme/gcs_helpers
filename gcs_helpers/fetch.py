@@ -4,6 +4,7 @@ import re
 import secrets
 from google.cloud import storage
 import rasterio as rio
+from . import utils
 
 
 GS_PREFIX='gs://'
