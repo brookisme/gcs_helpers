@@ -5,9 +5,9 @@ import secrets
 from google.cloud import storage
 # colab hack
 try:
-    import image_kit.io as io
+    import imagebox.io as io
 except:
-    import image_kit.image_kit.io as io
+    import imagebox.imagebox.io as io
 from . import utils
 
 
