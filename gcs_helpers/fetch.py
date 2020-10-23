@@ -100,7 +100,8 @@ def csv(
         remove_data=True,
         return_dest_with_data=False,
         return_profile=True,
-        client=None):
+        client=None,
+        **read_csv_kwargs):
     dest=blob(
         bucket=bucket,
         key=key,
@@ -112,7 +113,7 @@ def csv(
         project=project,
         client=client)
     if return_data:
-        data=pd.read_csv(dest)
+        data=pd.read_csv(dest,**read_csv_kwargs)
         if remove_data:
             os.remove(dest)
         elif return_dest_with_data:
