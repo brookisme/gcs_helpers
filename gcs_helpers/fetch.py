@@ -112,7 +112,7 @@ def csv(
         project=project,
         client=client)
     if return_data:
-        data=pd.read_csv(dest,return_profile=return_profile)
+        data=pd.read_csv(dest)
         if remove_data:
             os.remove(dest)
         elif return_dest_with_data:
