@@ -2,7 +2,7 @@ from distutils.core import setup
 setup(
   name = 'gcs_helpers',
   packages = ['gcs_helpers'],
-  version = '0.0.0.6',
+  version = '0.0.0.7',
   description = 'GCS_HELPERS: helper methods for working with google cloud storage',
   author = 'Brookie Guzder-Williams',
   author_email = 'brook.williams@gmail.com',

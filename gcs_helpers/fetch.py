@@ -79,7 +79,7 @@ def image(
         data=_read_image(dest,return_profile=return_profile)
         if remove_data:
             os.remove(dest)
-        elif return_dest_with_data:
+        if (not remove_data) and return_dest_with_data:
             return data, dest
         else:
             return data
@@ -116,7 +116,7 @@ def csv(
         data=pd.read_csv(dest,**read_csv_kwargs)
         if remove_data:
             os.remove(dest)
-        elif return_dest_with_data:
+        if (not remove_data) and return_dest_with_data:
             return data, dest
         else:
             return data
