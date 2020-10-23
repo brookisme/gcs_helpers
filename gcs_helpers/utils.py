@@ -2,6 +2,7 @@ import re
 import json
 import geojson
 import secrets
+from pathlib import Path
 from affine import Affine
 from rasterio.crs import CRS
 from pyproj import Transformer
@@ -70,9 +71,13 @@ def image_profile(lon,lat,crs,resolution,im,driver=GTIFF_DRIVER):
 #
 # SHARED
 #
-def generate_name(name=None,ext=None):
+def generate_name(name=None,ext=None,folder=None,create_folder=True):
     if not name:
         name=secrets.token_urlsafe(16)
     if ext and (not re.search(f'.{ext}$',name)):
         name=f'{name}.{ext}'
+    if folder:
+        name=f'{folder}/{name}'
+        if create_folder:
+            Path(name).parent.mkdir(parents=True, exist_ok=True)
     return name

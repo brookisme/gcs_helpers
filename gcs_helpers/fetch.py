@@ -3,6 +3,7 @@ from io import BytesIO
 import re
 import secrets
 from google.cloud import storage
+import pandas as pd
 import rasterio as rio
 from . import utils
 
@@ -18,11 +19,11 @@ def bucket_key_from_path(path):
     return bucket, key
 
 
-
 def blob(
         bucket=None,
         key=None,
         dest=None,
+        dest_folder=None,
         ext=None,
         as_data=False,
         path=None,
@@ -42,7 +43,10 @@ def blob(
         return data
     else:
         if not dest:
-            dest=utils.generate_name(dest,ext)
+            dest=utils.generate_name(
+                name=dest,
+                ext=ext,
+                folder=dest_folder)
         utils.write_blob(blob,dest,mode=write_mode)
         return dest
 
@@ -51,6 +55,7 @@ def image(
         bucket=None,
         key=None,
         dest=None,
+        dest_folder=None,
         ext='tif',
         path=None,
         write_mode='wb',
@@ -64,16 +69,53 @@ def image(
         bucket=bucket,
         key=key,
         dest=dest,
+        dest_folder=dest_folder,
         ext=ext,
         path=path,
         write_mode=write_mode,
         project=project,
         client=client)
     if return_data:
-        data=_read(dest,return_profile=return_profile)
+        data=_read_image(dest,return_profile=return_profile)
         if remove_data:
             os.remove(dest)
-        if (not remove_data) and return_dest_with_data:
+        elif return_dest_with_data:
+            return data, dest
+        else:
+            return data
+    else:
+        return dest
+
+
+def csv(
+        bucket=None,
+        key=None,
+        dest=None,
+        dest_folder=None,
+        ext='csv',
+        path=None,
+        write_mode='wb',
+        project=None,
+        return_data=True,
+        remove_data=True,
+        return_dest_with_data=False,
+        return_profile=True,
+        client=None):
+    dest=blob(
+        bucket=bucket,
+        key=key,
+        dest=dest,
+        dest_folder=dest_folder,
+        ext=ext,
+        path=path,
+        write_mode=write_mode,
+        project=project,
+        client=client)
+    if return_data:
+        data=pd.read_csv(dest,return_profile=return_profile)
+        if remove_data:
+            os.remove(dest)
+        elif return_dest_with_data:
             return data, dest
         else:
             return data
@@ -84,7 +126,7 @@ def image(
 #
 # INTERNAL
 #
-def _read(path,return_profile=True,dtype=None):
+def _read_image(path,return_profile=True,dtype=None):
     with rio.open(path,'r') as src:
         if return_profile:
             profile=src.profile
