@@ -197,6 +197,7 @@ def json(
 # INTERNAL
 #
 def _gcs_path_and_bucket(dest,folder,bucket):
+    dest=re.sub('^gs://','',dest)
     if not bucket:
         parts=dest.split('/')
         bucket=parts[0]

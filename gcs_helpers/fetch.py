@@ -8,7 +8,6 @@ import rasterio as rio
 from . import utils
 
 
-GS_PREFIX='gs://'
 
 
 def bucket_key_from_path(path):
