@@ -10,6 +10,11 @@ from rasterio.windows import Window
 from . import utils
 
 
+FIRST='first'
+LAST='last'
+BAND_ORDERING=os.environ.get('GCS_HELPERS_BAND_ORDERING',FIRST)
+
+
 def bucket_key_from_path(path):
     path=re.sub('^gs://','',path)
     parts=path.split('/')
@@ -178,12 +183,19 @@ def _read_image(
                 resampling=resampling )
         if dtype:
             image=image.astype(dtype)
-        image=utils.order_bands(image,band_ordering)
+        image=_order_bands(image,band_ordering)
     if return_profile:
         return image, profile
     else:
         return image
 
+
+def _order_bands(image,band_ordering=None):
+    if band_ordering is None:
+        band_ordering=BAND_ORDERING 
+    if band_ordering.lower()==LAST:
+        image=image.transpose(1,2,0)
+    return image
 
 
 
