@@ -5,6 +5,7 @@ import secrets
 from google.cloud import storage
 import pandas as pd
 import rasterio as rio
+from rasterio.enums import Resampling
 from . import utils
 
 
@@ -134,7 +135,7 @@ def _read_image(
         scale=None,
         out_shape=None,
         bands=None,
-        resampling=RESAMPLING,
+        resampling=Resampling.bilinear,
         band_ordering=None,
         dtype=None):
     """ read image: duplicate of imagebox.io.read
