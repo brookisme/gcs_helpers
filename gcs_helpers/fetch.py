@@ -6,6 +6,7 @@ from google.cloud import storage
 import pandas as pd
 import rasterio as rio
 from rasterio.enums import Resampling
+from rasterio.windows import Window
 from . import utils
 
 
