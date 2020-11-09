@@ -8,8 +8,6 @@ import rasterio as rio
 from . import utils
 
 
-
-
 def bucket_key_from_path(path):
     path=re.sub('^gs://','',path)
     parts=path.split('/')
@@ -63,7 +61,8 @@ def image(
         remove_data=True,
         return_dest_with_data=False,
         return_profile=True,
-        client=None):
+        client=None,
+        **read_image_kwargs):
     dest=blob(
         bucket=bucket,
         key=key,
@@ -75,7 +74,7 @@ def image(
         project=project,
         client=client)
     if return_data:
-        data=_read_image(dest,return_profile=return_profile)
+        data=_read_image(dest,return_profile=return_profile,**read_image_kwargs)
         if remove_data:
             os.remove(dest)
         if (not remove_data) and return_dest_with_data:
@@ -126,16 +125,64 @@ def csv(
 #
 # INTERNAL
 #
-def _read_image(path,return_profile=True,dtype=None):
+def _read_image(
+        path,
+        window=None,
+        window_profile=True,
+        return_profile=True,
+        res=None,
+        scale=None,
+        out_shape=None,
+        bands=None,
+        resampling=RESAMPLING,
+        band_ordering=None,
+        dtype=None):
+    """ read image: duplicate of imagebox.io.read
+    Args: 
+        - path<str>: source path
+        - window<tuple|Window>: col_off, row_off, width, height
+        - window_profile<bool>:
+            - if True return profile for the window data
+            - else return profile for the src-image
+        - res<int>: rescale to new resolution. overides scale and out_shape
+        - scale<float>: rescale image res=>res*scale overrides out_shape
+        - out_shape<tuple>: (h,w) rescales image. overwritten by res and scale
+        - dtype<str>:
+    Returns:
+        <tuple> np.array, image-profile
+    """
     with rio.open(path,'r') as src:
         if return_profile:
             profile=src.profile
-        image=src.read()
+        if window:
+            w,h=window[2], window[3]
+            window=Window(*window)
+            if window_profile and return_profile:
+                profile['transform']=src.window_transform(window)
+                profile['width']=w
+                profile['height']=h
+        else:
+            w,h=src.width, src.height
+        if res:
+            scale=src.res[0]/res
+        if scale:
+            out_shape=(int(h*scale),int(w*scale))
+        if out_shape and return_profile:
+            profile=rescale_profile(profile,out_shape)
+        image=src.read(
+                indexes=bands,
+                window=window,
+                out_shape=out_shape,
+                resampling=resampling )
         if dtype:
             image=image.astype(dtype)
+        image=utils.order_bands(image,band_ordering)
     if return_profile:
         return image, profile
     else:
         return image
+
+
+
 
 
