@@ -13,10 +13,13 @@ from . import utils
 FIRST='first'
 LAST='last'
 BAND_ORDERING=os.environ.get('GCS_HELPERS_BAND_ORDERING',FIRST)
+REMOTE_HEAD=r'^(gs|http|https)://'
+GCS_ROOTS=r'^(storage\.googleapis\.com|storage\.cloud\.google\.com)/'
 
 
 def bucket_key_from_path(path):
-    path=re.sub('^gs://','',path)
+    path=re.sub(REMOTE_HEAD,'',path)
+    path=re.sub(GCS_ROOTS,'',path)
     parts=path.split('/')
     bucket=parts[0]
     key="/".join(parts[1:])
@@ -24,13 +27,13 @@ def bucket_key_from_path(path):
 
 
 def blob(
+        path=None,
         bucket=None,
         key=None,
         dest=None,
         dest_folder=None,
         ext=None,
         as_data=False,
-        path=None,
         write_mode='wb',
         project=None,
         client=None):
@@ -56,12 +59,12 @@ def blob(
 
 
 def image(
+        path=None,
         bucket=None,
         key=None,
         dest=None,
         dest_folder=None,
         ext='tif',
-        path=None,
         write_mode='wb',
         project=None,
         return_data=True,
@@ -93,12 +96,12 @@ def image(
 
 
 def csv(
+        path=None,
         bucket=None,
         key=None,
         dest=None,
         dest_folder=None,
         ext='csv',
-        path=None,
         write_mode='wb',
         project=None,
         return_data=True,
