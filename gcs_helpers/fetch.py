@@ -178,7 +178,7 @@ def _read_image(
         if scale:
             out_shape=(int(h*scale),int(w*scale))
         if out_shape and return_profile:
-            profile=rescale_profile(profile,out_shape)
+            profile=_rescale_profile(profile,out_shape)
         image=src.read(
                 indexes=bands,
                 window=window,
@@ -193,12 +193,27 @@ def _read_image(
         return image
 
 
+def _rescale_profile(profile,out_shape):
+    """ rescale profile: duplicate of imagebox.io.rescale_profile """
+    affine=profile['transform']
+    h_out,w_out=out_shape
+    h,w=profile['height'],profile['width']
+    res_y=int(affine.e*h/h_out)
+    res_x=int(affine.a*w/w_out)
+    profile['transform']=Affine(res_x, 0.0, affine.c,0.0, res_y, affine.f)
+    profile['height'],profile['width']=h_out,w_out
+    return profile
+
+
 def _order_bands(image,band_ordering=None):
     if band_ordering is None:
         band_ordering=BAND_ORDERING 
     if band_ordering.lower()==LAST:
         image=image.transpose(1,2,0)
     return image
+
+
+
 
 
 
