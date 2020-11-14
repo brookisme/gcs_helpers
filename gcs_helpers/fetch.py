@@ -4,6 +4,7 @@ import re
 import secrets
 from google.cloud import storage
 import pandas as pd
+from affine import Affine
 import rasterio as rio
 from rasterio.enums import Resampling
 from rasterio.windows import Window
