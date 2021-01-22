@@ -7,7 +7,7 @@ setup(
   package_dir = {
     'gcs_helpers': 'gcs_helpers'
   },
-  version = '0.0.0.20',
+  version = '0.0.0.21',
   description = 'GCS_HELPERS: helper methods for working with google cloud storage',
   author = 'Brookie Guzder-Williams',
   author_email = 'brook.williams@gmail.com',

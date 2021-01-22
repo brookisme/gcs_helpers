@@ -37,9 +37,10 @@ def write_json(obj,path):
         jsn=json.dump(obj,file)
 
 
-def write_blob(blob,path,mode='w'):
-    with open(path, mode) as file:
-        blob.download_to_file(file)
+def write_blob(blob,path,mode='w',check_existence=True):
+    if (not check_existence) or blob.exists():
+        with open(path, mode) as file:
+            blob.download_to_file(file)
 
 
 #
